@@ -1,0 +1,29 @@
+# Oyster Test container
+ version: '2'
+ services:
+   db:
+     image: postgres
+     ports:
+       - "5432:5432"
+     environment:
+       POSTGRES_USER: "oyster"
+       POSTGRES_PASSWORD: "qweqwe123"
+       POSTGRES_DB: "oyster"
+     volumes:
+       - "./db:/var/lib/postgresql/data"
+   cache:
+     image: redis
+     volumes:
+       - "./redis:/oyster"
+     ports:
+       - "6379:6379"
+     command: "redis-server /oyster/redis.conf"
+   web:
+     image: nginx
+     volumes:
+       - ./oyster-front:/usr/share/nginx/html
+     ports:
+       - "80:80"
+     depends_on:
+       - db
+       - cache
